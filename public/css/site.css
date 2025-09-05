@@ -1,11 +1,12 @@
 /* Basic styling for CSE Motors application */
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
     line-height: 1.6;
     color: #333;
+    background-color: #f8f9fa;
 }
 
 #top-header {
@@ -33,7 +34,8 @@ body {
     transition: background-color 0.3s;
 }
 
-#tools a:hover {
+#tools a:hover,
+#tools a:focus {
     background-color: white;
     color: #2c3e50;
 }
@@ -49,10 +51,11 @@ nav ul {
     padding: 0;
     display: flex;
     justify-content: center;
+    flex-wrap: wrap;
 }
 
 nav li {
-    margin: 0 1rem;
+    margin: 0 0.5rem;
 }
 
 nav a {
@@ -63,13 +66,14 @@ nav a {
     transition: background-color 0.3s;
 }
 
-nav a:hover {
+nav a:hover,
+nav a:focus {
     background-color: #2c3e50;
 }
 
 main {
     min-height: 60vh;
-    padding: 2rem;
+    padding: 0;
 }
 
 footer {
@@ -84,31 +88,230 @@ footer {
     margin: 0;
 }
 
-/* Home page specific styles */
-.hero {
-    background-color: #ecf0f1;
-    padding: 2rem;
-    border-radius: 8px;
+/* Hero Section */
+.hero-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem 1rem;
     text-align: center;
-    margin: 2rem 0;
+    position: relative;
+    overflow: hidden;
 }
 
-.hero h2 {
-    color: #2c3e50;
+.hero-content h1 {
+    font-size: 2.5rem;
     margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.hero-content p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+}
+
+.hero-image {
+    max-width: 100%;
+    height: auto;
+    margin-top: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+/* Featured Vehicles */
+.featured-vehicles {
+    padding: 3rem 1rem;
+    background-color: white;
+    text-align: center;
+}
+
+.featured-vehicles h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    color: #2c3e50;
+}
+
+.vehicle-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.vehicle-card {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.vehicle-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+}
+
+.vehicle-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.vehicle-card h3 {
+    margin: 1rem;
+    color: #2c3e50;
+    font-size: 1.3rem;
+}
+
+.vehicle-card p {
+    margin: 0 1rem 1rem;
+    color: #666;
+}
+
+/* About Section */
+.about-section {
+    padding: 3rem 1rem;
+    background-color: #f8f9fa;
+}
+
+.about-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.about-content h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #2c3e50;
+}
+
+.about-content > p {
+    font-size: 1.1rem;
+    margin-bottom: 3rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.features {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+}
+
+.feature {
+    background-color: white;
+    padding: 2rem 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.feature img {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 1rem;
+}
+
+.feature h4 {
+    margin-bottom: 0.5rem;
+    color: #2c3e50;
+}
+
+.feature p {
+    color: #666;
+    margin: 0;
+}
+
+/* CTA Section */
+.cta-section {
+    padding: 3rem 1rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    text-align: center;
+}
+
+.cta-section h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.cta-section p {
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    opacity: 0.9;
 }
 
 .btn {
     display: inline-block;
-    background-color: #3498db;
-    color: white;
     padding: 0.75rem 1.5rem;
     text-decoration: none;
     border-radius: 4px;
-    margin-top: 1rem;
-    transition: background-color 0.3s;
+    margin: 0.5rem;
+    transition: all 0.3s;
+    font-weight: 600;
 }
 
-.btn:hover {
+.btn.primary {
+    background-color: #3498db;
+    color: white;
+}
+
+.btn.primary:hover,
+.btn.primary:focus {
     background-color: #2980b9;
+    transform: translateY(-2px);
+}
+
+.btn.secondary {
+    background-color: transparent;
+    color: white;
+    border: 2px solid white;
+}
+
+.btn.secondary:hover,
+.btn.secondary:focus {
+    background-color: white;
+    color: #667eea;
+}
+
+/* Tablet Styles */
+@media screen and (min-width: 768px) {
+    .hero-content h1 {
+        font-size: 3rem;
+    }
+
+    .vehicle-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .features {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    nav li {
+        margin: 0 1rem;
+    }
+}
+
+/* Desktop Styles */
+@media screen and (min-width: 1024px) {
+    .hero-content h1 {
+        font-size: 3.5rem;
+    }
+
+    .vehicle-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .hero-section {
+        padding: 4rem 2rem;
+    }
+
+    .featured-vehicles,
+    .about-section,
+    .cta-section {
+        padding: 4rem 2rem;
+    }
 }
