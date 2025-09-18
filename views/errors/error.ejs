@@ -1,0 +1,25 @@
+<%- include('partials/head') %>
+
+<main>
+  <div id="error-content">
+    <h1><%= title %></h1>
+    <div class="error-message">
+      <%- message %>
+    </div>
+    <div class="error-actions">
+      <p>Don't worry, these things happen! Here are some suggestions:</p>
+      <ul>
+        <li><a href="/">Go back to the home page</a></li>
+        <li>Check the URL for any typos</li>
+        <li>Use the navigation menu above to find what you're looking for</li>
+      </ul>
+    </div>
+    
+    <!-- Add some humor to make errors less frustrating -->
+    <div class="error-humor">
+      <p>🚗 <em>Even the best vehicles sometimes take a wrong turn!</em></p>
+    </div>
+  </div>
+</main>
+
+<%- include('partials/footer') %>
