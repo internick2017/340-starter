@@ -32,4 +32,39 @@ Util.getNav = async function (req, res, next) {
  **************************************** */
 Util.handleErrors = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next)
 
+/* ****************************************
+ * Build the classification view HTML (WITH INTENTIONAL BUG)
+ **************************************** */
+Util.buildClassificationGrid = async function(data){
+  let grid
+  if(data.rows.length > 0){
+    grid = '<ul id="inv-display">'
+    data.rows.forEach(vehicle => { 
+      grid += '<li>'
+      // INTENTIONAL BUG: Using wrong property name (inv_thumbnail should be inv_image)
+      grid += '<a href="../../inv/detail/'+ vehicle.inv_id 
+      + '" title="View ' + vehicle.inv_make + ' '+ vehicle.inv_model 
+      + 'details"><img src="' + vehicle.inv_thumbnail 
+      +'" alt="Image of '+ vehicle.inv_make + ' ' + vehicle.inv_model 
+      +' on CSE Motors" /></a>'
+      grid += '<div class="namePrice">'
+      grid += '<hr />'
+      grid += '<h2>'
+      grid += '<a href="../../inv/detail/' + vehicle.inv_id +'" title="View ' 
+      + vehicle.inv_make + ' ' + vehicle.inv_model + ' details">' 
+      + vehicle.inv_make + ' ' + vehicle.inv_model + '</a>'
+      grid += '</h2>'
+      grid += '<span>$' 
+      + new Intl.NumberFormat('en-US').format(vehicle.inv_price) + '</span>'
+      grid += '</div>'
+      grid += '</li>'
+    })
+    grid += '</ul>'
+  } else { 
+    // INTENTIONAL BUG: Undefined variable 'classificationName'
+    grid = '<p class="notice">Sorry, no matching vehicles could be found for ' + classificationName + '.</p>'
+  }
+  return grid
+}
+
 module.exports = Util
