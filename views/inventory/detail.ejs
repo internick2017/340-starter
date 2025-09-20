@@ -1,0 +1,43 @@
+<%- include('../partials/head') %>
+<%- include('../partials/header') %>
+<main>
+  <h1><%= title %></h1>
+  <div class="detail-wrapper">
+    <%- detail %>
+  </div>
+</main>
+<%- include('../partials/footer') %>
+<style>
+.vehicle-detail-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  align-items: flex-start;
+}
+.vehicle-image {
+  flex: 1 1 300px;
+  max-width: 400px;
+}
+.vehicle-image img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+.vehicle-info {
+  flex: 2 1 300px;
+  min-width: 250px;
+}
+@media (max-width: 700px) {
+  .vehicle-detail-container {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .vehicle-image, .vehicle-info {
+    max-width: 100%;
+    min-width: 0;
+  }
+}
+.detail-wrapper {
+  margin-top: 1rem;
+}
+</style>
