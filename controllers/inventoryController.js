@@ -1,6 +1,7 @@
 
 const utilities = require("../utilities/");
 const invModel = require("../models/inventory-model");
+const { classificationValidationRules, inventoryValidationRules, checkValidation } = require("../utilities/validation");
 
 const inventoryController = {};
 
@@ -30,6 +31,89 @@ inventoryController.buildDetailById = async function(req, res, next) {
     nav,
     detail,
   });
+};
+
+// Management view
+inventoryController.buildManagement = async function(req, res, next) {
+  let nav = await utilities.getNav();
+  res.render("./inventory/management", {
+    title: "Vehicle Management",
+    nav,
+    messages: req.flash()
+  });
+};
+
+// Add classification view
+inventoryController.buildAddClassification = async function(req, res, next) {
+  let nav = await utilities.getNav();
+  res.render("./inventory/add-classification", {
+    title: "Add Classification",
+    nav,
+    messages: req.flash()
+  });
+};
+
+// Add inventory view
+inventoryController.buildAddInventory = async function(req, res, next) {
+  let nav = await utilities.getNav();
+  let classificationList = await utilities.buildClassificationList();
+  res.render("./inventory/add-inventory", {
+    title: "Add Vehicle",
+    nav,
+    classificationList,
+    messages: req.flash()
+  });
+};
+
+// Process add classification
+inventoryController.addClassification = async function(req, res, next) {
+  let nav = await utilities.getNav();
+  const { classification_name } = req.body;
+  
+  try {
+    await invModel.addClassification(classification_name);
+    req.flash('notice', `The ${classification_name} classification was successfully added.`);
+    res.redirect("/inv/");
+  } catch (error) {
+    req.flash('notice', 'Sorry, there was an error adding the classification.');
+    res.render("./inventory/add-classification", {
+      title: "Add Classification",
+      nav,
+      classification_name,
+      messages: req.flash()
+    });
+  }
+};
+
+// Process add inventory
+inventoryController.addInventory = async function(req, res, next) {
+  let nav = await utilities.getNav();
+  const { inv_make, inv_model, inv_year, inv_description, inv_image, inv_thumbnail, inv_price, inv_miles, inv_color, classification_id } = req.body;
+  
+  try {
+    await invModel.addInventory(inv_make, inv_model, inv_year, inv_description, inv_image, inv_thumbnail, inv_price, inv_miles, inv_color, classification_id);
+    req.flash('notice', `The ${inv_year} ${inv_make} ${inv_model} was successfully added.`);
+    res.redirect("/inv/");
+  } catch (error) {
+    req.flash('notice', 'Sorry, there was an error adding the vehicle.');
+    let classificationList = await utilities.buildClassificationList(classification_id);
+    res.render("./inventory/add-inventory", {
+      title: "Add Vehicle",
+      nav,
+      classificationList,
+      inv_make,
+      inv_model,
+      inv_year,
+      inv_description,
+      inv_image,
+      inv_thumbnail,
+      inv_price,
+      inv_miles,
+      inv_color,
+      classification_id,
+      messages: req.flash()
+    });
+  }
 };
 
 module.exports = inventoryController;

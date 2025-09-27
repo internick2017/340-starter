@@ -12,6 +12,8 @@ const static = require("./routes/static")
 const baseController = require("./controllers/baseController")
 const utilities = require("./utilities/")
 const expressLayouts = require("express-ejs-layouts")
+const session = require("express-session")
+const flash = require("connect-flash")
 
 /* ***********************
  * View Engine and Templates
@@ -19,6 +21,27 @@ const expressLayouts = require("express-ejs-layouts")
 app.set("view engine", "ejs")
 app.use(expressLayouts)
 app.set("layout", "./layouts/layout") // not at views root
+
+/* ***********************
+ * Middleware
+ *************************/
+// Process body parsing
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+
+// Session middleware
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'default-secret-key',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: false, // Set to true if using HTTPS
+    maxAge: 1000 * 60 * 60 * 24 // 24 hours
+  }
+}))
+
+// Flash messages
+app.use(flash())
 
 /* ***********************
  * Routes

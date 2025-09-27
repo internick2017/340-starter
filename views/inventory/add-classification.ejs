@@ -1,0 +1,58 @@
+<%- include('../partials/head', {title: title}) %>
+
+<body>
+  <div id="wrapper">
+    <header>
+      <%- include('../partials/header') %>
+      <%- include('../partials/navigation', {nav: nav}) %>
+    </header>
+    <main>
+      <div class="hero">
+        <div class="hero-content">
+          <h1>Add New Classification</h1>
+          <p>Add a new vehicle classification to organize your inventory</p>
+        </div>
+      </div>
+      
+      <!-- Flash Messages -->
+      <% if (messages.notice) { %>
+        <div class="notice">
+          <p><%= messages.notice %></p>
+        </div>
+      <% } %>
+      
+      <% if (messages.errors) { %>
+        <div class="errors">
+          <% messages.errors.forEach(error => { %>
+            <p><%= error.msg %></p>
+          <% }) %>
+        </div>
+      <% } %>
+
+      <div class="form-container">
+        <form action="/inv/add-classification" method="post" class="add-classification-form">
+          <div class="form-group">
+            <label for="classification_name">Classification Name</label>
+            <input 
+              type="text" 
+              id="classification_name" 
+              name="classification_name" 
+              value="<%= typeof classification_name !== 'undefined' ? classification_name : '' %>"
+              required
+              pattern="[a-zA-Z0-9]+"
+              title="Classification name cannot contain spaces or special characters"
+            >
+            <small class="form-help">Classification name cannot contain spaces or special characters</small>
+          </div>
+          
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Add Classification</button>
+            <a href="/inv/" class="btn btn-secondary">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </main>
+    <%- include('../partials/footer') %>
+  </div>
+</body>
+</html>
