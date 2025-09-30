@@ -41,10 +41,9 @@ Util.buildClassificationGrid = async function(data){
     grid = '<ul id="inv-display">'
     data.rows.forEach(vehicle => { 
       grid += '<li>'
-      // INTENTIONAL BUG: Using wrong property name (inv_thumbnail should be inv_image)
       grid += '<a href="../../inv/detail/'+ vehicle.inv_id 
       + '" title="View ' + vehicle.inv_make + ' '+ vehicle.inv_model 
-      + 'details"><img src="' + vehicle.inv_thumbnail 
+      + 'details"><img src="' + vehicle.inv_image 
       +'" alt="Image of '+ vehicle.inv_make + ' ' + vehicle.inv_model 
       +' on CSE Motors" /></a>'
       grid += '<div class="namePrice">'
@@ -61,8 +60,7 @@ Util.buildClassificationGrid = async function(data){
     })
     grid += '</ul>'
   } else { 
-    // INTENTIONAL BUG: Undefined variable 'classificationName'
-    grid = '<p class="notice">Sorry, no matching vehicles could be found for ' + classificationName + '.</p>'
+    grid = '<p class="notice">Sorry, no matching vehicles could be found.</p>'
   }
   return grid
 }
