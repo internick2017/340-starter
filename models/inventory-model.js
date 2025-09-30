@@ -77,4 +77,24 @@ async function addInventory(inv_make, inv_model, inv_year, inv_description, inv_
   }
 }
 
-module.exports = {getClassifications, getInventoryByClassificationId, getInventoryDetailById, addClassification, addInventory}
+/* ***************************
+ *  Get featured vehicles for home page
+ * ************************** */
+async function getFeaturedVehicles() {
+  try {
+    const sql = `
+      SELECT i.*, c.classification_name
+      FROM public.inventory AS i
+      JOIN public.classification AS c ON i.classification_id = c.classification_id
+      ORDER BY i.inv_id
+      LIMIT 6
+    `;
+    const data = await pool.query(sql);
+    return data;
+  } catch (error) {
+    console.error("getFeaturedVehicles error: " + error);
+    throw error;
+  }
+}
+
+module.exports = {getClassifications, getInventoryByClassificationId, getInventoryDetailById, addClassification, addInventory, getFeaturedVehicles}
