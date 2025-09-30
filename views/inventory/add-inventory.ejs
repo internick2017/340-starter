@@ -156,5 +156,117 @@
       </div>
     </main>
   </div>
+
+  <script>
+    // Enhanced client-side validation
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.querySelector('.add-inventory-form');
+      const inputs = {
+        make: document.getElementById('inv_make'),
+        model: document.getElementById('inv_model'),
+        year: document.getElementById('inv_year'),
+        price: document.getElementById('inv_price'),
+        miles: document.getElementById('inv_miles'),
+        color: document.getElementById('inv_color'),
+        description: document.getElementById('inv_description'),
+        image: document.getElementById('inv_image'),
+        thumbnail: document.getElementById('inv_thumbnail')
+      };
+      
+      // Real-time validation for text inputs
+      [inputs.make, inputs.model, inputs.color].forEach(input => {
+        input.addEventListener('input', function() {
+          const value = this.value.trim();
+          if (value.length > 0 && value.length > 30) {
+            this.setCustomValidity('Field must be 30 characters or less');
+            this.style.borderColor = '#e74c3c';
+          } else {
+            this.setCustomValidity('');
+            this.style.borderColor = '#27ae60';
+          }
+        });
+      });
+      
+      // Real-time validation for year
+      inputs.year.addEventListener('input', function() {
+        const year = parseInt(this.value);
+        const currentYear = new Date().getFullYear();
+        if (year < 1900 || year > currentYear + 1) {
+          this.setCustomValidity(`Year must be between 1900 and ${currentYear + 1}`);
+          this.style.borderColor = '#e74c3c';
+        } else {
+          this.setCustomValidity('');
+          this.style.borderColor = '#27ae60';
+        }
+      });
+      
+      // Real-time validation for price
+      inputs.price.addEventListener('input', function() {
+        const price = parseFloat(this.value);
+        if (price < 0) {
+          this.setCustomValidity('Price must be a positive number');
+          this.style.borderColor = '#e74c3c';
+        } else {
+          this.setCustomValidity('');
+          this.style.borderColor = '#27ae60';
+        }
+      });
+      
+      // Real-time validation for miles
+      inputs.miles.addEventListener('input', function() {
+        const miles = parseInt(this.value);
+        if (miles < 0) {
+          this.setCustomValidity('Miles must be a positive number');
+          this.style.borderColor = '#e74c3c';
+        } else {
+          this.setCustomValidity('');
+          this.style.borderColor = '#27ae60';
+        }
+      });
+      
+      // Form submission validation
+      form.addEventListener('submit', function(e) {
+        let isValid = true;
+        const errors = [];
+        
+        // Validate required fields
+        Object.keys(inputs).forEach(key => {
+          const input = inputs[key];
+          if (input.hasAttribute('required') && !input.value.trim()) {
+            errors.push(`${input.previousElementSibling.textContent} is required`);
+            isValid = false;
+          }
+        });
+        
+        // Validate year range
+        const year = parseInt(inputs.year.value);
+        const currentYear = new Date().getFullYear();
+        if (year < 1900 || year > currentYear + 1) {
+          errors.push(`Year must be between 1900 and ${currentYear + 1}`);
+          isValid = false;
+        }
+        
+        // Validate price
+        const price = parseFloat(inputs.price.value);
+        if (price < 0) {
+          errors.push('Price must be a positive number');
+          isValid = false;
+        }
+        
+        // Validate miles
+        const miles = parseInt(inputs.miles.value);
+        if (miles < 0) {
+          errors.push('Miles must be a positive number');
+          isValid = false;
+        }
+        
+        if (!isValid) {
+          e.preventDefault();
+          alert('Please fix the following errors:\n\n' + errors.join('\n'));
+          return false;
+        }
+      });
+    });
+  </script>
 </body>
 </html>

@@ -49,5 +49,58 @@
       </div>
     </main>
   </div>
+
+  <script>
+    // Enhanced client-side validation
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.querySelector('.add-classification-form');
+      const classificationInput = document.getElementById('classification_name');
+      
+      // Real-time validation
+      classificationInput.addEventListener('input', function() {
+        const value = this.value;
+        const isValid = /^[a-zA-Z0-9]+$/.test(value);
+        
+        if (value.length > 0) {
+          if (isValid) {
+            this.setCustomValidity('');
+            this.style.borderColor = '#27ae60';
+          } else {
+            this.setCustomValidity('Classification name cannot contain spaces or special characters');
+            this.style.borderColor = '#e74c3c';
+          }
+        } else {
+          this.setCustomValidity('');
+          this.style.borderColor = '#ddd';
+        }
+      });
+      
+      // Form submission validation
+      form.addEventListener('submit', function(e) {
+        const classificationName = classificationInput.value.trim();
+        
+        if (!/^[a-zA-Z0-9]+$/.test(classificationName)) {
+          e.preventDefault();
+          alert('Classification name cannot contain spaces or special characters');
+          classificationInput.focus();
+          return false;
+        }
+        
+        if (classificationName.length < 1) {
+          e.preventDefault();
+          alert('Classification name is required');
+          classificationInput.focus();
+          return false;
+        }
+        
+        if (classificationName.length > 30) {
+          e.preventDefault();
+          alert('Classification name must be 30 characters or less');
+          classificationInput.focus();
+          return false;
+        }
+      });
+    });
+  </script>
 </body>
 </html>
