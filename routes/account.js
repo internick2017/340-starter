@@ -24,16 +24,17 @@ const passwordUpdateRules = [
 
 function checkValidation(req, res, next) {
   const errors = []
-  if (req.body.firstname && req.body.firstname.trim().length === 0) {
+  
+  if (!req.body.firstname || req.body.firstname.trim().length === 0) {
     errors.push({ msg: 'First name is required' })
   }
-  if (req.body.lastname && req.body.lastname.trim().length === 0) {
+  if (!req.body.lastname || req.body.lastname.trim().length === 0) {
     errors.push({ msg: 'Last name is required' })
   }
-  if (req.body.email && !req.body.email.includes('@')) {
+  if (!req.body.email || !req.body.email.includes('@')) {
     errors.push({ msg: 'Valid email is required' })
   }
-  if (req.body.password && req.body.password.length < 6) {
+  if (!req.body.password || req.body.password.length < 6) {
     errors.push({ msg: 'Password must be at least 6 characters' })
   }
   

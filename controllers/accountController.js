@@ -84,19 +84,23 @@ accountController.processLogin = async function(req, res, next) {
 accountController.processRegister = async function(req, res, next) {
   const { firstname, lastname, email, password } = req.body
   
+  console.log('Registration attempt:', { firstname, lastname, email, password: password ? 'provided' : 'missing' })
+  
   try {
     const existingAccount = await accountModel.getAccountByEmail(email)
     if (existingAccount.rows.length > 0) {
+      console.log('Email already exists:', email)
       req.flash('notice', 'Email already exists')
       return res.redirect('/account/register')
     }
     
-    await accountModel.createAccount(firstname, lastname, email, password)
+    const result = await accountModel.createAccount(firstname, lastname, email, password)
+    console.log('Registration successful:', result.rows[0])
     req.flash('notice', 'Registration successful. Please log in.')
     res.redirect('/account/login')
   } catch (error) {
     console.error('Registration error:', error)
-    req.flash('notice', 'Registration failed')
+    req.flash('notice', 'Registration failed: ' + error.message)
     res.redirect('/account/register')
   }
 }
