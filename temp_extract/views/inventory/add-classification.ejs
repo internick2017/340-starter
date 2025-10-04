@@ -1,0 +1,106 @@
+<%- include('../partials/head', {title: title}) %>
+
+<body>
+  <div id="wrapper">
+    <main>
+      <div class="hero">
+        <div class="hero-content">
+          <h1>Add New Classification</h1>
+          <p>Add a new vehicle classification to organize your inventory</p>
+        </div>
+      </div>
+      
+      <!-- Flash Messages -->
+      <% if (messages.notice) { %>
+        <div class="notice">
+          <p><%= messages.notice %></p>
+        </div>
+      <% } %>
+      
+      <% if (messages.errors) { %>
+        <div class="errors">
+          <% messages.errors.forEach(error => { %>
+            <p><%= error.msg %></p>
+          <% }) %>
+        </div>
+      <% } %>
+
+      <div class="form-container">
+        <form action="/inv/add-classification" method="post" class="add-classification-form">
+          <div class="form-group">
+            <label for="classification_name">Classification Name</label>
+            <input 
+              type="text" 
+              id="classification_name" 
+              name="classification_name" 
+              value="<%= typeof classification_name !== 'undefined' ? classification_name : '' %>"
+              required
+              pattern="[a-zA-Z0-9]+"
+              title="Classification name cannot contain spaces or special characters"
+            >
+            <small class="form-help">Classification name cannot contain spaces or special characters</small>
+          </div>
+          
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Add Classification</button>
+            <a href="/inv/" class="btn btn-secondary">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Enhanced client-side validation
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.querySelector('.add-classification-form');
+      const classificationInput = document.getElementById('classification_name');
+      
+      // Real-time validation
+      classificationInput.addEventListener('input', function() {
+        const value = this.value;
+        const isValid = /^[a-zA-Z0-9]+$/.test(value);
+        
+        if (value.length > 0) {
+          if (isValid) {
+            this.setCustomValidity('');
+            this.style.borderColor = '#27ae60';
+          } else {
+            this.setCustomValidity('Classification name cannot contain spaces or special characters');
+            this.style.borderColor = '#e74c3c';
+          }
+        } else {
+          this.setCustomValidity('');
+          this.style.borderColor = '#ddd';
+        }
+      });
+      
+      // Form submission validation
+      form.addEventListener('submit', function(e) {
+        const classificationName = classificationInput.value.trim();
+        
+        if (!/^[a-zA-Z0-9]+$/.test(classificationName)) {
+          e.preventDefault();
+          alert('Classification name cannot contain spaces or special characters');
+          classificationInput.focus();
+          return false;
+        }
+        
+        if (classificationName.length < 1) {
+          e.preventDefault();
+          alert('Classification name is required');
+          classificationInput.focus();
+          return false;
+        }
+        
+        if (classificationName.length > 30) {
+          e.preventDefault();
+          alert('Classification name must be 30 characters or less');
+          classificationInput.focus();
+          return false;
+        }
+      });
+    });
+  </script>
+</body>
+</html>

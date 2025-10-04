@@ -1,0 +1,36 @@
+<%- include('../partials/head', {title: title}) %>
+
+<body>
+  <div id="wrapper">
+    <main>
+      <div class="hero">
+        <div class="hero-content">
+          <h1>Delete Vehicle</h1>
+        </div>
+      </div>
+      
+      <% if (messages.notice) { %>
+        <div class="notice">
+          <p><%= messages.notice %></p>
+        </div>
+      <% } %>
+
+      <div class="delete-confirmation">
+        <h2><%= vehicle.inv_year %> <%= vehicle.inv_make %> <%= vehicle.inv_model %></h2>
+        <img src="<%= vehicle.inv_image %>" alt="<%= vehicle.inv_year %> <%= vehicle.inv_make %> <%= vehicle.inv_model %>" />
+        
+        <p><strong>Price:</strong> $<%= new Intl.NumberFormat('en-US').format(vehicle.inv_price) %></p>
+        <p><strong>Miles:</strong> <%= new Intl.NumberFormat('en-US').format(vehicle.inv_miles) %></p>
+        
+        <p>Are you sure you want to delete this vehicle?</p>
+        
+        <form method="post" action="/inv/delete/<%= vehicle.inv_id %>">
+          <button type="submit">Delete</button>
+          <a href="/inv/">Cancel</a>
+        </form>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
+
