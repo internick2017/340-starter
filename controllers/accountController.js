@@ -29,9 +29,12 @@ accountController.buildAccountManagement = async function(req, res, next) {
   
   let greeting = ""
   if (account.account_type === "Admin") {
-    greeting = "Welcome Administrator"
+    greeting = `Welcome ${account.account_firstname}, you are logged in as an Administrator and may manage the inventory.`
   } else if (account.account_type === "Employee") {
-    greeting = "Welcome Employee"
+    greeting = `Welcome ${account.account_firstname}, you are logged in as an Employee.`
+  } else {
+    // For Client type - no greeting should be shown (h2 element should not be present)
+    greeting = ""
   }
   
   res.render("./account/account-management", {
@@ -65,7 +68,9 @@ accountController.processLogin = async function(req, res, next) {
       { 
         account_id: account.account_id,
         account_type: account.account_type,
-        account_email: account.account_email
+        account_email: account.account_email,
+        account_firstname: account.account_firstname,
+        account_lastname: account.account_lastname
       },
       process.env.ACCESS_TOKEN_SECRET || 'default-secret',
       { expiresIn: '1h' }

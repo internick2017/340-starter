@@ -14,6 +14,8 @@ const utilities = require("./utilities/")
 const expressLayouts = require("express-ejs-layouts")
 const session = require("express-session")
 const flash = require("connect-flash")
+const cookieParser = require("cookie-parser")
+const jwt = require("jsonwebtoken")
 
 /* ***********************
  * View Engine and Templates
@@ -29,6 +31,8 @@ app.set("layout", "./layouts/layout") // not at views root
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
+app.use(cookieParser())
+
 // Session middleware
 app.use(session({
   secret: process.env.SESSION_SECRET || 'default-secret-key',
@@ -42,6 +46,21 @@ app.use(session({
 
 // Flash messages
 app.use(flash())
+
+app.use((req, res, next) => {
+  try {
+    const token = req.cookies.jwt
+    if (token) {
+      const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
+      res.locals.accountData = decoded
+    } else {
+      res.locals.accountData = null
+    }
+  } catch (error) {
+    res.locals.accountData = null
+  }
+  next()
+})
 
 /* ***********************
  * Routes
