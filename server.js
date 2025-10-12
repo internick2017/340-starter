@@ -36,11 +36,11 @@ app.use(cookieParser())
 // Session middleware
 app.use(session({
   secret: process.env.SESSION_SECRET || 'fallback-secret-key-for-development-only-change-in-production',
-  resave: false,
-  saveUninitialized: false,
+  resave: true,
+  saveUninitialized: true,
   name: 'sessionId',
   cookie: {
-    secure: process.env.NODE_ENV === 'production',
+    secure: false, // Set to false for localhost development
     httpOnly: true,
     maxAge: 1000 * 60 * 60 * 24 // 24 hours
   }
@@ -49,6 +49,7 @@ app.use(session({
 // Flash messages
 app.use(flash())
 
+// JWT token verification middleware
 app.use((req, res, next) => {
   try {
     const token = req.cookies.jwt
@@ -64,6 +65,12 @@ app.use((req, res, next) => {
     res.locals.accountData = null
     res.locals.loggedin = 0
   }
+  next()
+})
+
+// Make comparison count available to all views
+app.use((req, res, next) => {
+  res.locals.compareCount = req.session.compareVehicles ? req.session.compareVehicles.length : 0
   next()
 })
 

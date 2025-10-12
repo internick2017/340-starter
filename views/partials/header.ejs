@@ -4,7 +4,7 @@
   </span>
   <div id="tools">
     <a href="/comparison" title="Compare vehicles" class="comparison-link">
-      Compare (<span id="compare-count">0</span>)
+      Compare (<span id="compare-count"><%= typeof compareCount !== 'undefined' ? compareCount : 0 %></span>)
     </a>
     <% if (locals.loggedin) { %>
       <a title="Click to access account management" href="/account/">Welcome <%= locals.accountData.account_firstname %></a>

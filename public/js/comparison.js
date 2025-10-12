@@ -44,11 +44,19 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function updateComparisonCount() {
-  // This would be updated via server-side rendering or AJAX
-  // For now, it's handled by the server rendering the count
+  // Update the count display from server-rendered value
   const countElement = document.getElementById('compare-count');
-  if (countElement && typeof window.comparisonCount !== 'undefined') {
-    countElement.textContent = window.comparisonCount;
+  if (countElement) {
+    // Use the server-provided count
+    if (typeof window.comparisonCount !== 'undefined') {
+      countElement.textContent = window.comparisonCount;
+    }
+    
+    // Add visual feedback if count > 0
+    if (window.comparisonCount > 0) {
+      countElement.style.fontWeight = 'bold';
+      countElement.style.color = '#28a745';
+    }
   }
 }
 

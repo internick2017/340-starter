@@ -13,14 +13,13 @@ compController.buildComparisonView = async function(req, res, next) {
     const sessionId = req.sessionID
     const accountId = res.locals.accountData ? res.locals.accountData.account_id : null
     
-    // Get vehicle IDs from session or query params
     let vehicleIds = req.session.compareVehicles || []
+    
     if (req.query.vehicles) {
       vehicleIds = req.query.vehicles.split(',').map(id => parseInt(id)).filter(id => !isNaN(id))
       req.session.compareVehicles = vehicleIds
     }
     
-    // Validate vehicle limit
     if (vehicleIds.length > 4) {
       req.flash("notice", "You can compare maximum 4 vehicles at once.")
       vehicleIds = vehicleIds.slice(0, 4)
@@ -53,42 +52,41 @@ compController.addToComparison = async function(req, res, next) {
   try {
     const vehicleId = parseInt(req.params.vehicleId)
     
-    // Validation
     if (!vehicleId || isNaN(vehicleId)) {
       req.flash("error", "Invalid vehicle ID.")
-      return res.redirect("back")
+      return res.redirect(req.get("Referrer") || "/")
     }
     
-    // Verify vehicle exists
     const vehicleData = await invModel.getInventoryDetailById(vehicleId)
     if (!vehicleData.rows.length) {
       req.flash("error", "Vehicle not found.")
-      return res.redirect("back")
+      return res.redirect(req.get("Referrer") || "/")
     }
     
-    // Initialize comparison session
     if (!req.session.compareVehicles) {
       req.session.compareVehicles = []
     }
     
-    // Check if already in comparison
     if (req.session.compareVehicles.includes(vehicleId)) {
       req.flash("notice", "Vehicle is already in your comparison.")
-      return res.redirect("back")
+      return res.redirect(req.get("Referrer") || "/")
     }
     
-    // Check limit
     if (req.session.compareVehicles.length >= 4) {
       req.flash("error", "You can compare maximum 4 vehicles. Remove one to add another.")
-      return res.redirect("back")
+      return res.redirect("/comparison")
     }
     
-    // Add to comparison
     req.session.compareVehicles.push(vehicleId)
     const vehicle = vehicleData.rows[0]
     req.flash("success", `${vehicle.inv_year} ${vehicle.inv_make} ${vehicle.inv_model} added to comparison.`)
     
-    res.redirect("back")
+    req.session.save((err) => {
+      if (err) {
+        return next(err)
+      }
+      res.redirect("/comparison")
+    })
   } catch (error) {
     next(error)
   }
@@ -171,8 +169,11 @@ compController.saveComparison = async function(req, res, next) {
     
     // Save comparison
     await compModel.saveComparison(sessionId, vehicleIds, comparisonName.trim(), accountId)
-    req.flash("success", "Comparison saved successfully!")
     
+    // Clear current comparison after saving
+    req.session.compareVehicles = []
+    
+    req.flash("success", "Comparison saved successfully!")
     res.redirect("/comparison/saved")
   } catch (error) {
     next(error)

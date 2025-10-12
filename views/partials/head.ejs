@@ -3,4 +3,8 @@
 <title><%= title %></title>
 <link rel="stylesheet" href="/css/site.css" media="screen">
 <link rel="stylesheet" href="/css/styles.css" media="screen">
+<script>
+  // Make comparison count available to client-side JavaScript
+  window.comparisonCount = <%= typeof compareCount !== 'undefined' ? compareCount : 0 %>;
+</script>
 <script src="/js/comparison.js" defer></script>
