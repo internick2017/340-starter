@@ -8,19 +8,38 @@ document.addEventListener('DOMContentLoaded', function() {
   const compareForms = document.querySelectorAll('form[action*="/comparison/add/"]');
   compareForms.forEach(form => {
     form.addEventListener('submit', function(e) {
-      // Optional: Add loading state or confirmation
+      // Add loading state and visual feedback
       const button = this.querySelector('button[type="submit"]');
       if (button) {
+        const originalText = button.textContent;
         button.disabled = true;
         button.textContent = 'Adding...';
+        button.style.opacity = '0.7';
         
         // Re-enable after a short delay in case of redirect failure
         setTimeout(() => {
           button.disabled = false;
-          button.textContent = 'Add to Compare';
+          button.textContent = originalText;
+          button.style.opacity = '1';
         }, 3000);
       }
     });
+  });
+  
+  // Add hover effects and click animations
+  const compareButtons = document.querySelectorAll('.btn-compare');
+  compareButtons.forEach(button => {
+    // Add click animation
+    button.addEventListener('click', function(e) {
+      this.style.transform = 'scale(0.95)';
+      setTimeout(() => {
+        this.style.transform = '';
+      }, 150);
+    });
+    
+    // Ensure button is visible and styled
+    button.style.display = 'inline-block';
+    button.style.visibility = 'visible';
   });
 });
 
