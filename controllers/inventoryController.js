@@ -36,13 +36,11 @@ inventoryController.buildDetailById = async function(req, res, next) {
 // Management view
 inventoryController.buildManagement = async function(req, res, next) {
   let nav = await utilities.getNav();
-  const accountData = utilities.getAccountData(req);
   const data = await invModel.getAllInventory();
   res.render("./inventory/management", {
     title: "Vehicle Management",
     nav,
     data,
-    accountData,
     messages: req.flash()
   });
 };

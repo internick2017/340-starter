@@ -4,7 +4,6 @@ const baseController = {}
 
 baseController.buildHome = async function(req, res){
   const nav = await utilities.getNav()
-  const accountData = utilities.getAccountData(req)
   
   let featuredVehicles = []
   try {
@@ -17,8 +16,7 @@ baseController.buildHome = async function(req, res){
   res.render("index", {
     title: "Home", 
     nav, 
-    featuredVehicles,
-    accountData
+    featuredVehicles
   })
 }
 

@@ -34,15 +34,29 @@ app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
 
 // Session middleware
-app.use(session({
-  secret: process.env.SESSION_SECRET || 'default-secret-key',
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    secure: false, // Set to true if using HTTPS
-    maxAge: 1000 * 60 * 60 * 24 // 24 hours
-  }
-}))
+if (process.env.NODE_ENV === 'development') {
+  app.use(session({
+    secret: process.env.SESSION_SECRET || 'default-secret-key',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: false,
+      maxAge: 1000 * 60 * 60 * 24
+    }
+  }))
+} else {
+  app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    name: 'sessionId',
+    cookie: {
+      secure: process.env.NODE_ENV === 'production',
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 24
+    }
+  }))
+}
 
 // Flash messages
 app.use(flash())
