@@ -34,7 +34,7 @@ Util.getNav = async function (req, res, next) {
 Util.handleErrors = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next)
 
 /* ****************************************
- * Build the classification view HTML (WITH INTENTIONAL BUG)
+ * Build the classification view HTML with comparison buttons
  **************************************** */
 Util.buildClassificationGrid = async function(data){
   let grid
@@ -56,6 +56,11 @@ Util.buildClassificationGrid = async function(data){
       grid += '</h2>'
       grid += '<span>$' 
       + new Intl.NumberFormat('en-US').format(vehicle.inv_price) + '</span>'
+      grid += '<div class="vehicle-actions">'
+      grid += '<form action="/comparison/add/' + vehicle.inv_id + '" method="post" style="display: inline;">'
+      grid += '<button type="submit" class="btn-compare">Add to Compare</button>'
+      grid += '</form>'
+      grid += '</div>'
       grid += '</div>'
       grid += '</li>'
     })
@@ -68,7 +73,7 @@ Util.buildClassificationGrid = async function(data){
 
 
 /* ****************************************
- * Build the vehicle detail view HTML
+ * Build the vehicle detail view HTML with comparison functionality
  **************************************** */
 Util.buildDetailView = function(vehicle) {
   if (!vehicle) return '<p class="notice">Vehicle not found.</p>';
@@ -84,6 +89,12 @@ Util.buildDetailView = function(vehicle) {
         <p><strong>Color:</strong> ${vehicle.inv_color}</p>
         <p><strong>Description:</strong> ${vehicle.inv_description}</p>
         <p><strong>Classification:</strong> ${vehicle.classification_name}</p>
+        <div class="vehicle-detail-actions">
+          <form action="/comparison/add/${vehicle.inv_id}" method="post" style="display: inline; margin-right: 10px;">
+            <button type="submit" class="btn btn-compare">Add to Compare</button>
+          </form>
+          <a href="/comparison" class="btn btn-secondary">View Comparisons</a>
+        </div>
       </div>
     </div>
   `;
@@ -160,6 +171,13 @@ Util.checkAccountType = (req, res, next) => {
     req.flash("notice", "You do not have permission to access this area.")
     return res.redirect("/account/login")
   }
+}
+
+/* ****************************************
+ * Get comparison count for display
+ **************************************** */
+Util.getComparisonCount = (req) => {
+  return req.session.compareVehicles ? req.session.compareVehicles.length : 0
 }
 
 module.exports = Util

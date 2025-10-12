@@ -4,3 +4,68 @@
 *:after {
   box-sizing: border-box;
 }
+
+/******* Comparison Styles ***************/
+.btn-compare, .btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+  font-size: 14px;
+  transition: background-color 0.3s, transform 0.2s;
+  margin: 2px;
+}
+
+.btn-compare {
+  background: #28a745;
+  color: white;
+}
+
+.btn-compare:hover {
+  background: #218838;
+  transform: translateY(-1px);
+}
+
+.comparison-link {
+  background: #007bff;
+  color: white !important;
+  padding: 6px 12px;
+  border-radius: 4px;
+  text-decoration: none;
+  margin-right: 10px;
+}
+
+.comparison-link:hover {
+  background: #0056b3;
+}
+
+.vehicle-actions, .vehicle-detail-actions {
+  margin-top: 15px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+#inv-display li {
+  position: relative;
+}
+
+#inv-display .vehicle-actions {
+  margin-top: 10px;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .vehicle-actions, .vehicle-detail-actions {
+    flex-direction: column;
+  }
+  
+  .comparison-link {
+    display: block;
+    text-align: center;
+    margin: 5px 0;
+  }
+}

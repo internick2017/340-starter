@@ -1,0 +1,243 @@
+<%- include('../partials/head') %>
+<%- include('../partials/header') %>
+
+<main>
+  <h1><%= title %></h1>
+  
+  <%- include('../partials/messages') %>
+  
+  <div class="saved-comparisons-container">
+    <div class="page-header">
+      <p>Here are your saved vehicle comparisons:</p>
+      <a href="/comparison" class="btn btn-primary">New Comparison</a>
+    </div>
+    
+    <% if (comparisons && comparisons.length > 0) { %>
+      <div class="comparisons-grid">
+        <% comparisons.forEach(function(comparison) { %>
+          <div class="comparison-item">
+            <div class="comparison-header">
+              <h3><%= comparison.comparison_name %></h3>
+              <div class="comparison-meta">
+                <span class="vehicle-count"><%= comparison.vehicle_ids.length %> vehicles</span>
+                <span class="save-date">Saved: <%= new Date(comparison.comparison_date).toLocaleDateString() %></span>
+              </div>
+            </div>
+            
+            <div class="comparison-preview">
+              <div class="vehicle-ids">
+                <strong>Vehicle IDs:</strong> <%= comparison.vehicle_ids.join(', ') %>
+              </div>
+            </div>
+            
+            <div class="comparison-actions">
+              <a href="/comparison/load/<%= comparison.comparison_id %>" class="btn btn-success">Load & View</a>
+              <form action="/comparison/delete/<%= comparison.comparison_id %>" method="post" 
+                    style="display: inline;" 
+                    onsubmit="return confirm('Are you sure you want to delete this comparison?')">
+                <button type="submit" class="btn btn-danger">Delete</button>
+              </form>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } else { %>
+      <div class="no-comparisons">
+        <h2>No Saved Comparisons</h2>
+        <p>You haven't saved any vehicle comparisons yet.</p>
+        <div class="getting-started">
+          <h3>Get Started:</h3>
+          <ol>
+            <li><a href="/inv/type/1">Browse our vehicle inventory</a></li>
+            <li>Add vehicles to compare by clicking "Add to Compare"</li>
+            <li><a href="/comparison">Go to the comparison page</a></li>
+            <li>Save your comparison with a memorable name</li>
+          </ol>
+        </div>
+      </div>
+    <% } %>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>
+
+<style>
+.saved-comparisons-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #ddd;
+}
+
+.page-header p {
+  margin: 0;
+  font-size: 16px;
+  color: #666;
+}
+
+.comparisons-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 20px;
+}
+
+.comparison-item {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.comparison-item:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.comparison-header h3 {
+  margin: 0 0 10px 0;
+  color: #333;
+  font-size: 18px;
+}
+
+.comparison-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 15px;
+}
+
+.vehicle-count {
+  background: #e9ecef;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.comparison-preview {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+}
+
+.vehicle-ids {
+  font-size: 14px;
+  color: #495057;
+}
+
+.comparison-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+  font-size: 14px;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  text-decoration: none;
+}
+
+.btn-primary { 
+  background: #007bff; 
+  color: white; 
+}
+
+.btn-success { 
+  background: #28a745; 
+  color: white; 
+}
+
+.btn-danger { 
+  background: #dc3545; 
+  color: white; 
+}
+
+.btn:hover {
+  opacity: 0.9;
+}
+
+.no-comparisons {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.no-comparisons h2 {
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.getting-started {
+  background: #f8f9fa;
+  padding: 30px;
+  border-radius: 8px;
+  margin-top: 30px;
+  text-align: left;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.getting-started h3 {
+  margin-top: 0;
+  color: #333;
+}
+
+.getting-started ol {
+  padding-left: 20px;
+}
+
+.getting-started li {
+  margin-bottom: 10px;
+}
+
+.getting-started a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.getting-started a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+  
+  .comparisons-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .comparison-meta {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .comparison-actions {
+    flex-direction: column;
+  }
+}
+</style>

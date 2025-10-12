@@ -1,0 +1,342 @@
+<%- include('../partials/head') %>
+<%- include('../partials/header') %>
+
+<main>
+  <h1><%= title %></h1>
+  
+  <%- include('../partials/messages') %>
+  
+  <% if (vehicles && vehicles.length > 0) { %>
+    <div class="comparison-container">
+      <div class="comparison-header">
+        <h2>Comparing <%= vehicles.length %> Vehicle<%= vehicles.length > 1 ? 's' : '' %></h2>
+        <div class="comparison-actions">
+          <form action="/comparison/clear" method="post" style="display: inline;">
+            <button type="submit" class="btn btn-secondary">Clear All</button>
+          </form>
+          <% if (vehicles.length >= 2) { %>
+            <button type="button" class="btn btn-primary" onclick="showSaveForm()">Save Comparison</button>
+          <% } %>
+        </div>
+      </div>
+      
+      <!-- Save Comparison Form -->
+      <div id="saveForm" class="save-form" style="display: none;">
+        <form action="/comparison/save" method="post">
+          <div class="form-group">
+            <label for="comparisonName">Comparison Name:</label>
+            <input type="text" id="comparisonName" name="comparisonName" 
+                   value="<%= typeof comparisonName !== 'undefined' ? comparisonName : '' %>"
+                   maxlength="100" required>
+            <div class="form-help">Give your comparison a memorable name (max 100 characters)</div>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-success">Save Comparison</button>
+            <button type="button" class="btn btn-secondary" onclick="hideSaveForm()">Cancel</button>
+          </div>
+        </form>
+      </div>
+      
+      <!-- Vehicle Comparison Grid -->
+      <div class="vehicle-comparison-grid">
+        <% vehicles.forEach(function(vehicle) { %>
+          <div class="vehicle-comparison-card">
+            <div class="vehicle-image">
+              <img src="<%= vehicle.inv_image %>" alt="<%= vehicle.inv_year %> <%= vehicle.inv_make %> <%= vehicle.inv_model %>">
+            </div>
+            
+            <div class="vehicle-info">
+              <h3><%= vehicle.inv_year %> <%= vehicle.inv_make %> <%= vehicle.inv_model %></h3>
+              
+              <div class="comparison-details">
+                <div class="detail-row">
+                  <span class="label">Price:</span>
+                  <span class="value price">$<%= new Intl.NumberFormat('en-US').format(vehicle.inv_price) %></span>
+                </div>
+                
+                <div class="detail-row">
+                  <span class="label">Mileage:</span>
+                  <span class="value"><%= new Intl.NumberFormat('en-US').format(vehicle.inv_miles) %> miles</span>
+                </div>
+                
+                <div class="detail-row">
+                  <span class="label">Color:</span>
+                  <span class="value"><%= vehicle.inv_color %></span>
+                </div>
+                
+                <div class="detail-row">
+                  <span class="label">Classification:</span>
+                  <span class="value"><%= vehicle.classification_name %></span>
+                </div>
+                
+                <div class="detail-row description">
+                  <span class="label">Description:</span>
+                  <span class="value"><%= vehicle.inv_description %></span>
+                </div>
+              </div>
+              
+              <div class="vehicle-actions">
+                <a href="/inv/detail/<%= vehicle.inv_id %>" class="btn btn-info">View Details</a>
+                <form action="/comparison/remove/<%= vehicle.inv_id %>" method="post" style="display: inline;">
+                  <button type="submit" class="btn btn-danger">Remove</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    </div>
+  <% } else { %>
+    <div class="empty-comparison">
+      <h2>No Vehicles to Compare</h2>
+      <p>You haven't added any vehicles to compare yet.</p>
+      <p>Browse our <a href="/inv/type/1">inventory</a> and click "Add to Compare" on vehicles you're interested in.</p>
+      
+      <div class="comparison-tips">
+        <h3>How to Compare Vehicles:</h3>
+        <ol>
+          <li>Browse vehicle categories or search for specific vehicles</li>
+          <li>Click "Add to Compare" on up to 4 vehicles</li>
+          <li>Return to this page to see them side-by-side</li>
+          <li>Save your favorite comparisons for later reference</li>
+        </ol>
+      </div>
+    </div>
+  <% } %>
+</main>
+
+<%- include('../partials/footer') %>
+
+<style>
+.comparison-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.comparison-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #ddd;
+}
+
+.comparison-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.save-form {
+  background: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.form-group input {
+  width: 100%;
+  max-width: 400px;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.form-help {
+  font-size: 12px;
+  color: #666;
+  margin-top: 5px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.vehicle-comparison-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.vehicle-comparison-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.vehicle-image img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.vehicle-info {
+  padding: 15px;
+}
+
+.vehicle-info h3 {
+  margin: 0 0 15px 0;
+  color: #333;
+  font-size: 18px;
+}
+
+.comparison-details {
+  margin-bottom: 15px;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  padding: 5px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.detail-row.description {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.detail-row .label {
+  font-weight: bold;
+  color: #555;
+}
+
+.detail-row .value {
+  color: #333;
+}
+
+.detail-row .price {
+  font-weight: bold;
+  color: #007bff;
+  font-size: 16px;
+}
+
+.vehicle-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+.btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.btn-primary { background: #007bff; color: white; }
+.btn-secondary { background: #6c757d; color: white; }
+.btn-success { background: #28a745; color: white; }
+.btn-danger { background: #dc3545; color: white; }
+.btn-info { background: #17a2b8; color: white; }
+
+.btn:hover {
+  opacity: 0.8;
+}
+
+.empty-comparison {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.comparison-tips {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  margin-top: 30px;
+  text-align: left;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.comparison-tips h3 {
+  margin-top: 0;
+  color: #333;
+}
+
+.comparison-tips ol {
+  padding-left: 20px;
+}
+
+@media (max-width: 768px) {
+  .comparison-header {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+  
+  .vehicle-comparison-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .vehicle-actions {
+    flex-direction: column;
+  }
+}
+</style>
+
+<script>
+function showSaveForm() {
+  document.getElementById('saveForm').style.display = 'block';
+  document.getElementById('comparisonName').focus();
+}
+
+function hideSaveForm() {
+  document.getElementById('saveForm').style.display = 'none';
+}
+
+// Client-side validation
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.querySelector('#saveForm form');
+  if (form) {
+    form.addEventListener('submit', function(e) {
+      const nameInput = document.getElementById('comparisonName');
+      const name = nameInput.value.trim();
+      
+      if (!name) {
+        e.preventDefault();
+        alert('Please enter a comparison name.');
+        nameInput.focus();
+        return false;
+      }
+      
+      if (name.length > 100) {
+        e.preventDefault();
+        alert('Comparison name must be 100 characters or less.');
+        nameInput.focus();
+        return false;
+      }
+      
+      if (!/^[a-zA-Z0-9\s\-_]+$/.test(name)) {
+        e.preventDefault();
+        alert('Comparison name can only contain letters, numbers, spaces, hyphens, and underscores.');
+        nameInput.focus();
+        return false;
+      }
+    });
+  }
+});
+</script>

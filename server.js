@@ -81,6 +81,10 @@ app.use("/inv", inventoryRoutes)
 const accountRoutes = require("./routes/account")
 app.use("/account", accountRoutes)
 
+// Comparison routes
+const comparisonRoutes = require("./routes/comparison")
+app.use("/comparison", comparisonRoutes)
+
 // File Not Found Route - must be last route in list
 app.use(async (req, res, next) => {
   next({status: 404, message: 'Sorry, we appear to have lost that page.'})
