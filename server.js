@@ -34,29 +34,17 @@ app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
 
 // Session middleware
-if (process.env.NODE_ENV === 'development') {
-  app.use(session({
-    secret: process.env.SESSION_SECRET || 'default-secret-key',
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      secure: false,
-      maxAge: 1000 * 60 * 60 * 24
-    }
-  }))
-} else {
-  app.use(session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    name: 'sessionId',
-    cookie: {
-      secure: process.env.NODE_ENV === 'production',
-      httpOnly: true,
-      maxAge: 1000 * 60 * 60 * 24
-    }
-  }))
-}
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'fallback-secret-key-for-development-only-change-in-production',
+  resave: false,
+  saveUninitialized: false,
+  name: 'sessionId',
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    httpOnly: true,
+    maxAge: 1000 * 60 * 60 * 24 // 24 hours
+  }
+}))
 
 // Flash messages
 app.use(flash())
@@ -65,13 +53,16 @@ app.use((req, res, next) => {
   try {
     const token = req.cookies.jwt
     if (token) {
-      const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
+      const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET || 'fallback-jwt-secret-change-in-production')
       res.locals.accountData = decoded
+      res.locals.loggedin = 1
     } else {
       res.locals.accountData = null
+      res.locals.loggedin = 0
     }
   } catch (error) {
     res.locals.accountData = null
+    res.locals.loggedin = 0
   }
   next()
 })

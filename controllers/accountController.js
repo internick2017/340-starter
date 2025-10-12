@@ -74,7 +74,7 @@ accountController.accountLogin = async function(req, res, next) {
     const passwordMatch = await bcrypt.compare(account_password, accountData.account_password)
     if (passwordMatch) {
       delete accountData.account_password
-      const accessToken = jwt.sign(accountData, process.env.ACCESS_TOKEN_SECRET, { expiresIn: 3600 * 1000 })
+      const accessToken = jwt.sign(accountData, process.env.ACCESS_TOKEN_SECRET || 'fallback-jwt-secret-change-in-production', { expiresIn: 3600 * 1000 })
       res.cookie("jwt", accessToken, { httpOnly: true, maxAge: 3600 * 1000 })
       return res.redirect("/account/")
     } else {
@@ -174,7 +174,7 @@ accountController.updateAccount = async function(req, res, next) {
   if (updateResult) {
     const accountData = await accountModel.getAccountById(account_id)
     delete accountData.account_password
-    const accessToken = jwt.sign(accountData, process.env.ACCESS_TOKEN_SECRET, { expiresIn: 3600 * 1000 })
+    const accessToken = jwt.sign(accountData, process.env.ACCESS_TOKEN_SECRET || 'fallback-jwt-secret-change-in-production', { expiresIn: 3600 * 1000 })
     res.cookie("jwt", accessToken, { httpOnly: true, maxAge: 3600 * 1000 })
     req.flash("notice", `${account_firstname}, your account was successfully updated.`)
     res.redirect("/account/")

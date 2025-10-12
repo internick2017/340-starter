@@ -122,7 +122,7 @@ Util.checkJWTToken = (req, res, next) => {
   if (req.cookies.jwt) {
    jwt.verify(
     req.cookies.jwt,
-    process.env.ACCESS_TOKEN_SECRET,
+    process.env.ACCESS_TOKEN_SECRET || 'fallback-jwt-secret-change-in-production',
     function (err, accountData) {
      if (err) {
       req.flash("Please log in")
