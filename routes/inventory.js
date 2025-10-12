@@ -10,20 +10,20 @@ router.get('/type/:classificationId', utilities.handleErrors(inventoryController
 // Route to get vehicle detail by inventory id
 router.get('/detail/:invId', utilities.handleErrors(inventoryController.buildDetailById));
 
-// Management route
-router.get('/', utilities.handleErrors(inventoryController.buildManagement));
+// Management route - requires Employee/Admin
+router.get('/', utilities.checkJWTToken, utilities.checkAccountType, utilities.handleErrors(inventoryController.buildManagement));
 
-// Add classification routes
-router.get('/add-classification', utilities.handleErrors(inventoryController.buildAddClassification));
-router.post('/add-classification', classificationValidationRules, checkValidation, utilities.handleErrors(inventoryController.addClassification));
+// Add classification routes - requires Employee/Admin
+router.get('/add-classification', utilities.checkJWTToken, utilities.checkAccountType, utilities.handleErrors(inventoryController.buildAddClassification));
+router.post('/add-classification', utilities.checkJWTToken, utilities.checkAccountType, classificationValidationRules, checkValidation, utilities.handleErrors(inventoryController.addClassification));
 
-// Add inventory routes
-router.get('/add-inventory', utilities.handleErrors(inventoryController.buildAddInventory));
-router.post('/add-inventory', inventoryValidationRules, checkValidation, utilities.handleErrors(inventoryController.addInventory));
+// Add inventory routes - requires Employee/Admin
+router.get('/add-inventory', utilities.checkJWTToken, utilities.checkAccountType, utilities.handleErrors(inventoryController.buildAddInventory));
+router.post('/add-inventory', utilities.checkJWTToken, utilities.checkAccountType, inventoryValidationRules, checkValidation, utilities.handleErrors(inventoryController.addInventory));
 
-// Delete inventory routes
-router.get('/delete/:inv_id', utilities.handleErrors(inventoryController.buildDeleteConfirmation));
-router.post('/delete/:inv_id', utilities.handleErrors(inventoryController.deleteInventory));
+// Delete inventory routes - requires Employee/Admin
+router.get('/delete/:inv_id', utilities.checkJWTToken, utilities.checkAccountType, utilities.handleErrors(inventoryController.buildDeleteConfirmation));
+router.post('/delete/:inv_id', utilities.checkJWTToken, utilities.checkAccountType, utilities.handleErrors(inventoryController.deleteInventory));
 
 // Intentional 500 error route for testing
 router.get('/error-test', utilities.handleErrors((req, res, next) => {
